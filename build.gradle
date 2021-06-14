@@ -1,0 +1,75 @@
+plugins {
+    // Apply the Kotlin JVM plugin to add support for Kotlin.
+    id 'org.jetbrains.kotlin.jvm' version '1.4.31'
+
+    // shadowJar plugin
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+
+    // Apply the application plugin to add support for building a CLI application.
+    id 'application'
+}
+
+repositories {
+    // Use jcenter for resolving dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+}
+
+ext {
+    koin_version = '2.2.2'
+
+    ktor_version = '1.5.3'
+    logback_version = '1.2.3'
+
+    exposed_version = '0.30.1'
+    h2_version = '1.4.199'
+    mysql_connector_version = '8.0.19'
+    hikari_cp_version = '3.4.2'
+}
+
+dependencies {
+    implementation platform('org.jetbrains.kotlin:kotlin-bom')
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+
+    // koin
+    testImplementation "org.koin:koin-test:$koin_version"
+    implementation "org.koin:koin-gradle-plugin:$koin_version"
+    implementation "org.koin:koin-ktor:$koin_version"
+
+    // ktor
+    implementation "io.ktor:ktor-server-core:$ktor_version"
+    implementation "io.ktor:ktor-server-cio:$ktor_version"
+    implementation "ch.qos.logback:logback-classic:$logback_version"
+    implementation "io.ktor:ktor-serialization:$ktor_version"
+    implementation "io.ktor:ktor-gson:$ktor_version"
+    implementation "io.ktor:ktor-locations:$ktor_version"
+
+    implementation "io.ktor:ktor-client-core:$ktor_version"
+    implementation "io.ktor:ktor-client-cio:$ktor_version"
+    implementation "io.ktor:ktor-client-logging:$ktor_version"
+    implementation  "io.ktor:ktor-client-gson:$ktor_version"
+
+    // database
+    implementation"org.jetbrains.exposed:exposed-core:$exposed_version"
+    implementation"org.jetbrains.exposed:exposed-jdbc:$exposed_version"
+    implementation "com.h2database:h2:$h2_version"
+    implementation "mysql:mysql-connector-java:$mysql_connector_version"
+    implementation "com.zaxxer:HikariCP:$hikari_cp_version"
+
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
+}
+
+application {
+    // Define the main class for the application.
+    mainClassName = 'com.example.app.AppKt'
+}
+
+mainClassName = 'com.example.app.AppKt'
+
+// This task will generate your fat JAR and put it in the ./build/libs/ directory
+shadowJar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
